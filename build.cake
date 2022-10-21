@@ -1,4 +1,4 @@
-var target = Argument("target", "ExecuteBuild");
+var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var solutionFolder = "./";
 var myLibraryFolder = "./MyLibrary";
@@ -62,7 +62,7 @@ Task("PublishLibrary")
     });
   });
 
-  Task("ExecuteBuild")
+  Task("Default")
     .IsDependentOn("Publish")
     .IsDependentOn("PublishLibrary");
 
