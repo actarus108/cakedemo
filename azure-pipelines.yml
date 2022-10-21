@@ -6,11 +6,13 @@ pool:
 
 steps:
 - task: DotNetCoreCLI@2
+  displayName: Dotnet Tool Restore
   inputs:
     command: custom
-    custom: dotnet tool restore
+    custom: tool restore
 
 - task: Cake@2
+  displayName: Cake Build Process
   inputs:
     script: 'build.cake'
     target: 'Default'
