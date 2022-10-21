@@ -5,9 +5,16 @@ VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWebApp", "MyWebApp\MyWebApp.csproj", "{DEA2B1E6-7D22-44F5-891C-FD2F7AEFDEA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLibrary", "MyLibrary\MyLibrary.csproj", "{7117E071-411F-4405-B0D6-4A305560E187}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLibrary", "MyLibrary\MyLibrary.csproj", "{7117E071-411F-4405-B0D6-4A305560E187}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLibrary.Tests", "MyLibrary.Tests\MyLibrary.Tests.csproj", "{DB55B2DB-3682-4951-AA0D-0F3C690DEAAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLibrary.Tests", "MyLibrary.Tests\MyLibrary.Tests.csproj", "{DB55B2DB-3682-4951-AA0D-0F3C690DEAAE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1AD83532-A34B-40F6-90A8-94AD8D070697}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+		build.cake = build.cake
+		.config\dotnet-tools.json = .config\dotnet-tools.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
