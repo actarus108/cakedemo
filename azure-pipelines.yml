@@ -9,7 +9,8 @@ steps:
   displayName: Dotnet Tool Restore
   inputs:
     command: custom
-    custom: tool restore
+    custom: tool
+    arguments: restore
 
 - task: Cake@2
   displayName: Cake Build Process
