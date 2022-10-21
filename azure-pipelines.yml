@@ -5,6 +5,11 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: DotNetCoreCLI@2
+  inputs:
+    command: custom
+    custom: dotnet tool restore
+
 - task: Cake@2
   inputs:
     script: 'build.cake'
