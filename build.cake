@@ -1,11 +1,14 @@
-var target = Argument("target", "Publish");
+var target = Argument("target", "ExecuteBuild");
 var configuration = Argument("configuration", "Release");
 var solutionFolder = "./";
-var outputFolder = "./artifacts";
+var myLibraryFolder = "./MyLibrary";
+var outputFolder = "./artifacts/mywebapp";
+var myLibraryOutputFolder = "./artifacts/mylibrary";
 
 Task("Clean")
   .Does(() => {
     CleanDirectory(outputFolder);
+    CleanDirectory(myLibraryOutputFolder);
   });
 
 Task("Restore")
@@ -14,6 +17,7 @@ Task("Restore")
   });
 
 Task("Build")
+  .IsDependentOn("Clean")
   .IsDependentOn("Restore")
   .Does(() => {
     DotNetBuild(solutionFolder, new DotNetBuildSettings
@@ -35,7 +39,6 @@ Task("Test")
   });
 
 Task("Publish")
-  .IsDependentOn("Clean")
   .IsDependentOn("Test")
   .Does(() => {
     DotNetPublish(solutionFolder, new DotNetPublishSettings
@@ -46,5 +49,21 @@ Task("Publish")
       OutputDirectory = outputFolder
     });
   });
+
+Task("PublishLibrary")
+  .IsDependentOn("Test")
+  .Does(() => {
+    DotNetPublish(myLibraryFolder, new DotNetPublishSettings
+    {
+      NoRestore = true,
+      Configuration = configuration,
+      NoBuild = true,
+      OutputDirectory = myLibraryOutputFolder
+    });
+  });
+
+  Task("ExecuteBuild")
+    .IsDependentOn("Publish")
+    .IsDependentOn("PublishLibrary");
 
 RunTarget(target);
