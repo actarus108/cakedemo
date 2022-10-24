@@ -70,10 +70,10 @@ Task("ZipArtifacts")
   .IsDependentOn("PublishLibrary")
   .Does(() => {
     var webAppFiles = GetFiles(webAppOutputFolder + "/*.*");
-    Zip(artifactsFolder, webAppZippedFileName, webAppFiles);
+    Zip(webAppOutputFolder, artifactsFolder + "/" + webAppZippedFileName, webAppFiles);
 
     var libraryFiles = GetFiles(myLibraryOutputFolder + "/*.*");
-    Zip(artifactsFolder, myLibraryZippedFileName, libraryFiles);
+    Zip(myLibraryOutputFolder, artifactsFolder + "/" + myLibraryZippedFileName, libraryFiles);
 
   });
 
