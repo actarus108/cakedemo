@@ -2,12 +2,15 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var solutionFolder = "./";
 var myLibraryFolder = "./MyLibrary";
-var outputFolder = "./artifacts/mywebapp";
+var artifactsFolder = "./artifacts";
+var webAppOutputFolder = "./artifacts/mywebapp";
+var webAppZippedFileName = "website.zip";
 var myLibraryOutputFolder = "./artifacts/mylibrary";
+var myLibraryZippedFileName = "mylibrary.zip";
 
 Task("Clean")
   .Does(() => {
-    CleanDirectory(outputFolder);
+    CleanDirectory(webAppOutputFolder);
     CleanDirectory(myLibraryOutputFolder);
   });
 
@@ -38,7 +41,7 @@ Task("Test")
     });
   });
 
-Task("Publish")
+Task("PublishWebApp")
   .IsDependentOn("Test")
   .Does(() => {
     DotNetPublish(solutionFolder, new DotNetPublishSettings
@@ -46,7 +49,7 @@ Task("Publish")
       NoRestore = true,
       Configuration = configuration,
       NoBuild = true,
-      OutputDirectory = outputFolder
+      OutputDirectory = webAppOutputFolder
     });
   });
 
@@ -62,8 +65,19 @@ Task("PublishLibrary")
     });
   });
 
-  Task("Default")
-    .IsDependentOn("Publish")
-    .IsDependentOn("PublishLibrary");
+Task("ZipArtifacts")
+  .IsDependentOn("PublishWebApp")
+  .IsDependentOn("PublishLibrary")
+  .Does(() => {
+    var webAppFiles = GetFiles(webAppOutputFolder + "/*.*");
+    Zip(artifactsFolder, webAppZippedFileName, webAppFiles);
+
+    var libraryFiles = GetFiles(myLibraryOutputFolder + "/*.*");
+    Zip(artifactsFolder, myLibraryZippedFileName, libraryFiles);
+
+  });
+
+Task("Default")
+  .IsDependentOn("ZipArtifacts");
 
 RunTarget(target);
