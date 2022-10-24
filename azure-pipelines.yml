@@ -21,9 +21,9 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(agent.builddirectory)\artifacts'
+    SourceFolder: '$(Build.SourcesDirectory)\artifacts'
     Contents: '**'
-    TargetFolder: '$(build.artifactstagingdirectory)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
     CleanTargetFolder: true
 
 - task: PublishBuildArtifacts@1
