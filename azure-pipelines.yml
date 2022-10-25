@@ -22,7 +22,9 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)/artifacts'
-    Contents: '*.zip'
+    Contents: |
+      *.zip
+      *.nupkg
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     CleanTargetFolder: true
 

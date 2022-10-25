@@ -1,29 +1,30 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var solutionFolder = "./";
+var rootAbsoluteDir = "./";
+var myWebAppFolder = "./MyWebApp";
 var myLibraryFolder = "./MyLibrary";
 var artifactsFolder = "./artifacts";
 var webAppOutputFolder = "./artifacts/mywebapp";
 var webAppZippedFileName = "website.zip";
-var myLibraryOutputFolder = "./artifacts/mylibrary";
-var myLibraryZippedFileName = "mylibrary.zip";
+var myLibraryOutputFolder = "./artifacts/mylibrary"; 
 
 Task("Clean")
   .Does(() => {
+    CleanDirectory(artifactsFolder);
     CleanDirectory(webAppOutputFolder);
     CleanDirectory(myLibraryOutputFolder);
   });
 
 Task("Restore")
   .Does(() => {
-    DotNetRestore(solutionFolder);
+    DotNetRestore(rootAbsoluteDir );
   });
 
 Task("Build")
   .IsDependentOn("Clean")
   .IsDependentOn("Restore")
   .Does(() => {
-    DotNetBuild(solutionFolder, new DotNetBuildSettings
+    DotNetBuild(rootAbsoluteDir, new DotNetBuildSettings
     {
       NoRestore = true,
       Configuration = configuration
@@ -33,7 +34,7 @@ Task("Build")
 Task("Test")
   .IsDependentOn("Build")
   .Does(() => {
-    DotNetTest(solutionFolder, new DotNetTestSettings
+    DotNetTest(rootAbsoluteDir, new DotNetTestSettings
     {
       NoRestore = true,
       Configuration = configuration,
@@ -44,13 +45,20 @@ Task("Test")
 Task("PublishWebApp")
   .IsDependentOn("Test")
   .Does(() => {
-    DotNetPublish(solutionFolder, new DotNetPublishSettings
+    DotNetPublish(myWebAppFolder , new DotNetPublishSettings
     {
       NoRestore = true,
       Configuration = configuration,
       NoBuild = true,
       OutputDirectory = webAppOutputFolder
     });
+  });
+
+Task("ZipWebAppOutput")
+  .IsDependentOn("PublishWebApp")
+  .Does(() => {
+    var webAppFiles = GetFiles(webAppOutputFolder + "/*.*");
+    Zip(webAppOutputFolder, artifactsFolder + "/" + webAppZippedFileName, webAppFiles);
   });
 
 Task("PublishLibrary")
@@ -65,19 +73,18 @@ Task("PublishLibrary")
     });
   });
 
-Task("ZipArtifacts")
-  .IsDependentOn("PublishWebApp")
+Task("CreateLibraryNugetPackage")
   .IsDependentOn("PublishLibrary")
   .Does(() => {
-    var webAppFiles = GetFiles(webAppOutputFolder + "/*.*");
-    Zip(webAppOutputFolder, artifactsFolder + "/" + webAppZippedFileName, webAppFiles);
-
-    var libraryFiles = GetFiles(myLibraryOutputFolder + "/*.*");
-    Zip(myLibraryOutputFolder, artifactsFolder + "/" + myLibraryZippedFileName, libraryFiles);
-
+    DotNetPack(myLibraryFolder + "/MyLibrary.csproj", new DotNetPackSettings
+    {
+      Configuration = configuration, 
+      OutputDirectory = artifactsFolder
+    });
   });
 
 Task("Default")
-  .IsDependentOn("ZipArtifacts");
+  .IsDependentOn("ZipWebAppOutput")
+  .IsDependentOn("CreateLibraryNugetPackage");
 
 RunTarget(target);
