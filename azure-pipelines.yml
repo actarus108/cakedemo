@@ -15,21 +15,39 @@ steps:
 - task: Cake@2
   displayName: Cake Build Process
   inputs:
-    script: 'build.cake'
-    target: 'Default'
-    verbosity: 'Verbose'
+    script: build.cake
+    target: Default
+    verbosity: Verbose
 
 - task: CopyFiles@2
+  displayName: Copy Files to ArtifactStagingDirectory
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/artifacts'
+    SourceFolder: $(Build.SourcesDirectory)/artifacts
     Contents: |
       *.zip
       *.nupkg
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    TargetFolder: $(Build.ArtifactStagingDirectory)
     CleanTargetFolder: true
 
-- task: PublishBuildArtifacts@1
+- task: PublishTestResults@2
+  displayName: Publish Tests Results
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    testResultsFormat: XUnit
+    testResultsFiles: '**/*.trx'
+    searchFolder: $(Build.SourcesDirectory)/testresults
+    testRunTitle: $(Build.BuildNumber)
+    publishRunAttachments: true
+
+# - task: PublishCodeCoverageResults@1
+#   displayName: Publish Code Coverage Results
+#   inputs:
+#     codeCoverageTool: 'Cobertura'
+#     summaryFileLocation: $(Build.SourcesDirectory)/testresults/**/coverage.cobertura.xml
+#     reportDirectory: $(Build.ArtifactStagingDirectory)
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifacts
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)
+    ArtifactName: drop
+    publishLocation: Container
