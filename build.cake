@@ -66,9 +66,9 @@ Task("Test")
             NoRestore = true,
             Configuration = configuration,
             NoBuild = true,
+            ResultsDirectory = testResultsFolder,
             Loggers = loggers,
-            ResultsDirectory = testResultsFolder
-            //Collectors = "XPlat Code Coverage"
+            Collectors = collectors
           })
         );
   });
