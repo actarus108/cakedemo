@@ -1,6 +1,10 @@
 trigger:
 - main
 
+variables:
+  buildConfiguration: Release
+  revision: ci
+
 pool:
   vmImage: ubuntu-latest
 
@@ -16,6 +20,7 @@ steps:
   displayName: Cake Build Process
   inputs:
     script: build.cake
+    arguments: -configuration $(buildConfiguration) -build $(Build.BuildId) -revision $(revision)
     target: Default
     verbosity: Verbose
 

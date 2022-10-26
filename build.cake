@@ -1,15 +1,9 @@
 using System.Diagnostics;
 
-//#tool "nuget:?package="
-
-var target 
-    = Argument("target", "Default");
-var build
-    = Argument("build", "0");
-var revision
-    = Argument("revision", string.Empty);
-var configuration 
-    = Argument("configuration", "Release");
+var target            = Argument("target", "Default");
+var configuration     = Argument("configuration", "Release");
+var build             = Argument("build", "0");
+var revision          = Argument("revision", string.Empty);
 
 var rootAbsoluteDir = "./";
 var artifactsFolder = "./artifacts";
@@ -49,13 +43,6 @@ Task("Build")
 Task("Test")
   .IsDependentOn("Build")
   .Does(() => {
-
-    List<string> loggers = new List<string>();
-    loggers.Add("trx");
-
-    List<string> collectors = new List<string>();
-    collectors.Add("XPlat Code Coverage");
-
     GetFiles(rootAbsoluteDir + "./**/*[Tt]ests/*.csproj")
       .ToList()
         .ForEach(file => 
@@ -65,8 +52,8 @@ Task("Test")
             Configuration = configuration,
             NoBuild = true,
             ResultsDirectory = testResultsFolder,
-            Loggers = loggers,
-            Collectors = collectors
+            Loggers = new List<string> { "trx" },
+            Collectors = new List<string> { "XPlat Code Coverage" }
           })
         );
   });
@@ -93,16 +80,12 @@ Task("ZipWebAppOutput")
 Task("PublishLibrary")
   .IsDependentOn("Test")
   .Does(() => {
-    DotNetPublish(rootAbsoluteDir + "/MyLibrary", new DotNetPublishSettings
+    DotNetPublish(rootAbsoluteDir + "MyLibrary", new DotNetPublishSettings
     {
       NoRestore = true,
       Configuration = configuration,
       NoBuild = true,
-      OutputDirectory = myLibraryOutputFolder,
-      // EnvironmentVariables = 
-      //   new Dictionary<string, string> {
-      //       { "build", build },
-      //       { "revision", revision }
+      OutputDirectory = myLibraryOutputFolder
     });
   });
 
@@ -110,15 +93,24 @@ Task("CreateLibraryNugetPackage")
   .IsDependentOn("PublishLibrary")
   .Does(() => {
 
-    // var version = FileVersionInfo
-    //         .GetVersionInfo(myLibraryOutputFolder + "/MyLibrary.dll")
-    //         .FileVersion; 
+    var projectName = "MyLibrary";
+    var basePath = $"./{projectName}/bin/{configuration}/net6.0";
+    var fileversion = FileVersionInfo.GetVersionInfo($"{basePath}/{projectName}.dll").FileVersion;
+    var packageVersion = $"{fileversion.Split('.')[0]}.{fileversion.Split('.')[1]}.{fileversion.Split('.')[2]}.{build}";
 
-    DotNetPack(rootAbsoluteDir + "/MyLibrary", new DotNetPackSettings
+    DotNetPack(rootAbsoluteDir + "MyLibrary", new DotNetPackSettings
     {
+      NoBuild = true,
       Configuration = configuration, 
+      NoRestore = true,          
       OutputDirectory = artifactsFolder,
-     // Version = version
+      VersionSuffix = revision,
+      MSBuildSettings = new DotNetMSBuildSettings {
+        FileVersion = fileversion,
+        PackageVersion = packageVersion,
+        VersionPrefix = packageVersion,
+        VersionSuffix = revision
+      }
     });
   });
 

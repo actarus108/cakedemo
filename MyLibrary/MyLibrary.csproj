@@ -5,6 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    
+    <Version>1.0.0</Version>   
+    <Authors>Yannick Willi</Authors>
+    <Product>Cake MyLibrary Demo</Product>
+    <Description>Library defining calculator methods</Description>
+    <Copyright>Yannick Willi</Copyright>
   </PropertyGroup>
 
 </Project>
