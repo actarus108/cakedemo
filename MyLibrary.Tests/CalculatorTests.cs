@@ -14,7 +14,7 @@ namespace MyLibrary.Tests
         [InlineData(5, 4, 9)]
         [InlineData(2, 8, 10)]
         [InlineData(11, 2, 13)]
-        [InlineData(1, 2, 3)]
+        [InlineData(1, 2, 5)]
         public void Add_ShouldWork(double x, double y, double expected)
         {
             double actual = _calculator.Add(x, y);
