@@ -19,6 +19,24 @@ steps:
     target: Default
     verbosity: Verbose
 
+- task: PublishTestResults@2
+  displayName: Publish Tests Results
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**/*.trx'
+    searchFolder: $(Build.SourcesDirectory)/testresults
+    testRunTitle: $(Build.BuildNumber)
+    publishRunAttachments: true
+  condition: always()
+
+- task: PublishCodeCoverageResults@1
+  displayName: Publish Code Coverage Results
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: $(Build.SourcesDirectory)/testresults/**/coverage.cobertura.xml
+    reportDirectory: $(Build.ArtifactStagingDirectory)
+  condition: always()
+
 - task: CopyFiles@2
   displayName: Copy Files to ArtifactStagingDirectory
   inputs:
@@ -28,22 +46,6 @@ steps:
       *.nupkg
     TargetFolder: $(Build.ArtifactStagingDirectory)
     CleanTargetFolder: true
-
-- task: PublishTestResults@2
-  displayName: Publish Tests Results
-  inputs:
-    testResultsFormat: VSTest
-    testResultsFiles: '**/*.trx'
-    searchFolder: $(Build.SourcesDirectory)/testresults
-    testRunTitle: $(Build.BuildNumber)
-    publishRunAttachments: true
-
-- task: PublishCodeCoverageResults@1
-  displayName: Publish Code Coverage Results
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: $(Build.SourcesDirectory)/testresults/**/coverage.cobertura.xml
-    reportDirectory: $(Build.ArtifactStagingDirectory)
 
 - task: PublishBuildArtifacts@1
   displayName: Publish Artifacts
