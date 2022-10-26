@@ -16,6 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set the Build Id
+        id: get-id
+        run: |
+          id=${${{github.run_id}}:-5}
+          echo "::set-output name=id::$id"
+
       - name: Dotnet Tool Restore
         run: dotnet tool restore
 
@@ -26,7 +32,7 @@ jobs:
           verbosity: Diagnostic
           arguments: |
             configuration: ${{ env.buildConfiguration }}
-            build: 0
+            build: ${{ steps.get-id.outputs.id }}
             revision: ${{ env.revision }}
         
       # - name: Publish Tests Results
