@@ -70,7 +70,7 @@ stages:
         - script: echo Deploying the Nuget Package
 
   - stage: DeployWebApp
-      jobs:
-      - job: DeployWebApp
-        steps:
-          - script: echo Deploying the Web Application
+    jobs:
+    - job: DeployWebApp
+      steps:
+        - script: echo Deploying the Web Application
