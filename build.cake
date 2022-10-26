@@ -12,11 +12,9 @@ var configuration
     = Argument("configuration", "Release");
 
 var rootAbsoluteDir = "./";
-var myWebAppFolder = "./MyWebApp";
-var myLibraryFolder = "./MyLibrary";
 var artifactsFolder = "./artifacts";
 var webAppOutputFolder = "./artifacts/mywebapp";
-var webAppZippedFileName = "website.zip";
+var webAppArtifactFileName = "website.zip";
 var myLibraryOutputFolder = "./artifacts/mylibrary"; 
 var testResultsFolder = "./testresults";
 
@@ -76,7 +74,7 @@ Task("Test")
 Task("PublishWebApp")
   .IsDependentOn("Test")
   .Does(() => {
-    DotNetPublish(myWebAppFolder , new DotNetPublishSettings
+    DotNetPublish(rootAbsoluteDir + "/MyWebApp" , new DotNetPublishSettings
     {
       NoRestore = true,
       Configuration = configuration,
@@ -89,13 +87,13 @@ Task("ZipWebAppOutput")
   .IsDependentOn("PublishWebApp")
   .Does(() => {
     var webAppFiles = GetFiles(webAppOutputFolder + "/*.*");
-    Zip(webAppOutputFolder, artifactsFolder + "/" + webAppZippedFileName, webAppFiles);
+    Zip(webAppOutputFolder, artifactsFolder + "/" + webAppArtifactFileName, webAppFiles);
   });
 
 Task("PublishLibrary")
   .IsDependentOn("Test")
   .Does(() => {
-    DotNetPublish(myLibraryFolder, new DotNetPublishSettings
+    DotNetPublish(rootAbsoluteDir + "/MyLibrary", new DotNetPublishSettings
     {
       NoRestore = true,
       Configuration = configuration,
@@ -116,7 +114,7 @@ Task("CreateLibraryNugetPackage")
     //         .GetVersionInfo(myLibraryOutputFolder + "/MyLibrary.dll")
     //         .FileVersion; 
 
-    DotNetPack(myLibraryFolder + "/MyLibrary.csproj", new DotNetPackSettings
+    DotNetPack(rootAbsoluteDir + "/MyLibrary", new DotNetPackSettings
     {
       Configuration = configuration, 
       OutputDirectory = artifactsFolder,
