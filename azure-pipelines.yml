@@ -20,7 +20,7 @@ steps:
   displayName: Cake Build Process
   inputs:
     script: build.cake
-    arguments: -configuration $(buildConfiguration) -build $(Build.BuildId) -revision $(revision)
+    arguments: --configuration $(buildConfiguration) --build $(Build.BuildId) --revision $(revision)
     target: Default
     verbosity: Verbose
 
