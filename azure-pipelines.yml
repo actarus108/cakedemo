@@ -8,53 +8,69 @@ variables:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: DotNetCoreCLI@2
-  displayName: Dotnet Tool Restore
-  inputs:
-    command: custom
-    custom: tool
-    arguments: restore
+stages:
+  - stage: Build
+    jobs:
+    - job: BuildJob
+      steps:        
+      - task: DotNetCoreCLI@2
+        displayName: Dotnet Tool Restore
+        inputs:
+          command: custom
+          custom: tool
+          arguments: restore
 
-- task: Cake@2
-  displayName: Cake Build Process
-  inputs:
-    script: build.cake
-    arguments: --configuration $(buildConfiguration) --build $(Build.BuildId) --revision $(revision)
-    target: Default
-    verbosity: Verbose
+      - task: Cake@2
+        displayName: Cake Build Process
+        inputs:
+          script: build.cake
+          arguments: --configuration $(buildConfiguration) --build $(Build.BuildId) --revision $(revision)
+          target: Default
+          verbosity: Verbose
 
-- task: PublishTestResults@2
-  displayName: Publish Tests Results
-  inputs:
-    testResultsFormat: VSTest
-    testResultsFiles: '**/*.trx'
-    searchFolder: $(Build.SourcesDirectory)/testresults
-    testRunTitle: $(Build.BuildNumber)
-    publishRunAttachments: true
-  condition: always()
+      - task: PublishTestResults@2
+        displayName: Publish Tests Results
+        inputs:
+          testResultsFormat: VSTest
+          testResultsFiles: '**/*.trx'
+          searchFolder: $(Build.SourcesDirectory)/testresults
+          testRunTitle: $(Build.BuildNumber)
+          publishRunAttachments: true
+        condition: always()
 
-- task: PublishCodeCoverageResults@1
-  displayName: Publish Code Coverage Results
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: $(Build.SourcesDirectory)/testresults/**/coverage.cobertura.xml
-    reportDirectory: $(Build.ArtifactStagingDirectory)
-  condition: always()
+      - task: PublishCodeCoverageResults@1
+        displayName: Publish Code Coverage Results
+        inputs:
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: $(Build.SourcesDirectory)/testresults/**/coverage.cobertura.xml
+          reportDirectory: $(Build.ArtifactStagingDirectory)
+        condition: always()
 
-- task: CopyFiles@2
-  displayName: Copy Files to ArtifactStagingDirectory
-  inputs:
-    SourceFolder: $(Build.SourcesDirectory)/artifacts
-    Contents: |
-      *.zip
-      *.nupkg
-    TargetFolder: $(Build.ArtifactStagingDirectory)
-    CleanTargetFolder: true
+      - task: CopyFiles@2
+        displayName: Copy Files to ArtifactStagingDirectory
+        inputs:
+          SourceFolder: $(Build.SourcesDirectory)/artifacts
+          Contents: |
+            *.zip
+            *.nupkg
+          TargetFolder: $(Build.ArtifactStagingDirectory)
+          CleanTargetFolder: true
 
-- task: PublishBuildArtifacts@1
-  displayName: Publish Artifacts
-  inputs:
-    PathtoPublish: $(Build.ArtifactStagingDirectory)
-    ArtifactName: drop
-    publishLocation: Container
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Artifacts
+        inputs:
+          PathtoPublish: $(Build.ArtifactStagingDirectory)
+          ArtifactName: drop
+          publishLocation: Container
+
+  - stage: DeployPackage
+    jobs:
+    - job: DeployPackage
+      steps:
+        - script: echo Deploying the Nuget Package
+
+  - stage: DeployWebApp
+      jobs:
+      - job: DeployWebApp
+        steps:
+          - script: echo Deploying the Web Application
