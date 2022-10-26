@@ -26,7 +26,7 @@ jobs:
           verbosity: Diagnostic
           arguments: |
             configuration: ${{ env.buildConfiguration }}
-            build: ${{ github.run_id }}
+            build: 0
             revision: ${{ env.revision }}
         
       # - name: Publish Tests Results
@@ -54,7 +54,6 @@ jobs:
   #     with: 
   #       name: drop
   #       path: artifacts
-
 
   # deployWebApp:
   #   needs: build
