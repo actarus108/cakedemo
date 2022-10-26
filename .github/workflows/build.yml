@@ -1,0 +1,63 @@
+name: Cake CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Dotnet Tool Restore
+        run: dotnet tool restore
+
+      - name: Cake Build Process
+        uses: cake-build/cake-action@v1.4.1
+        with:
+          target: Default
+          verbosity: Diagnostic
+          arguments: |
+            --configuration $(buildConfiguration) 
+            --build $(Build.BuildId) 
+            --revision $(revision)
+        
+      # - name: Publish Tests Results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: dotnet-results-${{ matrix.dotnet-version }}
+      #     path: TestResults-${{ matrix.dotnet-version }}        
+      #   if: ${{ always() }}
+
+      # - name: Publish Code Coverage Results
+
+      # - name: Publish Artifacts
+
+      # - uses: actions/upload-artifact@main
+      #   with:
+      #     name: drop
+      #     path: artifacts/
+
+  # deployPackage:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: actions/download-artifact@main
+  #     with: 
+  #       name: drop
+  #       path: artifacts
+
+
+  # deployWebApp:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: actions/download-artifact@main
+  #     with: 
+  #       name: drop
+  #       path: artifacts
