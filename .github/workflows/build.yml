@@ -21,7 +21,7 @@ jobs:
         id: get-id
         run: |
           buildid="${{github.run_id}}"
-          echo "id=${buildid: -5}" >> $BUILD_ID
+          echo "BUILD_ID=${buildid: -5}" >> $GITHUB_OUTPUT
         
       - name: Dotnet Tool Restore
         run: dotnet tool restore
