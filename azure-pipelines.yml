@@ -23,10 +23,13 @@ stages:
       - task: Cake@2
         displayName: Cake Build Process
         inputs:
-          script: build.cake
-          arguments: --configuration $(buildConfiguration) --build $(Build.BuildId) --revision $(revision)
+          script: build.cake          
           target: Default
           verbosity: Verbose
+          arguments: |
+            --configuration $(buildConfiguration) 
+            --build $(Build.BuildId) 
+            --revision $(revision)
 
       - task: PublishTestResults@2
         displayName: Publish Tests Results
