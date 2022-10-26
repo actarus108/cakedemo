@@ -38,12 +38,12 @@ steps:
     testRunTitle: $(Build.BuildNumber)
     publishRunAttachments: true
 
-# - task: PublishCodeCoverageResults@1
-#   displayName: Publish Code Coverage Results
-#   inputs:
-#     codeCoverageTool: 'Cobertura'
-#     summaryFileLocation: $(Build.SourcesDirectory)/testresults/**/coverage.cobertura.xml
-#     reportDirectory: $(Build.ArtifactStagingDirectory)
+- task: PublishCodeCoverageResults@1
+  displayName: Publish Code Coverage Results
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: $(Build.SourcesDirectory)/testresults/**/coverage.cobertura.xml
+    reportDirectory: $(Build.ArtifactStagingDirectory)
 
 - task: PublishBuildArtifacts@1
   displayName: Publish Artifacts
