@@ -25,9 +25,9 @@ jobs:
           target: Default
           verbosity: Diagnostic
           arguments: |
-            --configuration ${{ env.buildConfiguration }}
-            --build ${{ github.run_id }}
-            --revision ${{ env.revision }}
+            configuration: ${{ env.buildConfiguration }}
+            build: ${{ github.run_id }}
+            revision: ${{ env.revision }}
         
       # - name: Publish Tests Results
       #   uses: actions/upload-artifact@v3
