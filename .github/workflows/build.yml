@@ -7,6 +7,7 @@ on:
     branches: [ main ]
 
 env:
+  
   buildConfiguration: Release
   revision: ci
 
@@ -19,9 +20,9 @@ jobs:
       - name: Set the Build Id
         id: get-id
         run: |
-          id=${${{github.run_id}}:-5}
-          echo "::set-output name=id::$id"
-
+          buildid="${{github.run_id}}"
+          echo "id=${buildid: -5}" >> $BUILD_ID
+        
       - name: Dotnet Tool Restore
         run: dotnet tool restore
 
@@ -32,7 +33,7 @@ jobs:
           verbosity: Diagnostic
           arguments: |
             configuration: ${{ env.buildConfiguration }}
-            build: ${{ steps.get-id.outputs.id }}
+            build: ${{ steps.get-id.outputs.BUILD_ID }}
             revision: ${{ env.revision }}
         
       # - name: Publish Tests Results
