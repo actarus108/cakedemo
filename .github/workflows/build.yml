@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  buildConfiguration: Release
+  revision: ci
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,9 +25,9 @@ jobs:
           target: Default
           verbosity: Diagnostic
           arguments: |
-            --configuration $(buildConfiguration) 
-            --build $(Build.BuildId) 
-            --revision $(revision)
+            --configuration ${{ env.buildConfiguration }}
+            --build ${{ github.run_id }}
+            --revision ${{ env.revision }}
         
       # - name: Publish Tests Results
       #   uses: actions/upload-artifact@v3
