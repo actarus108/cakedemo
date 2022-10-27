@@ -86,8 +86,10 @@ jobs:
       with: 
         name: package
     - run: echo Deploying the Nuget Package
-    - run: |
-        dotnet nuget push "MyLibrary.*.nupkg"  --api-key ${{ secrets.PACKAGES_TOKEN }} --source "github"
+    - name: Adding GitHub as a NuGet Package Feed
+      run: dotnet nuget add source --username actarus108 --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/actarus108/index.json"
+    - name: Publishing the nuget Package to GitHub Packages
+      run: dotnet nuget push "MyLibrary.*.nupkg"  --api-key ${{ secrets.PACKAGES_TOKEN }} --source "github"
 
   deployWebApp:
     needs: build
