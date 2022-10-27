@@ -44,14 +44,22 @@ jobs:
           path: testresults/*.trx
           reporter: dotnet-trx
 
-      # - name: Publish Code Coverage Results
+      - name: Publish Code Coverage Results
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        if: always()
+        with: 
+          filename: testresults/**/coverage.cobertura.xml
+          badge: true
+          output: both
+          format: markdown
+          indicators: true
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@main
         with:
           name: drop
           path: |
-            artifacts/*.zip
+            artifacts/website.zip
             artifacts/*.nupkg
 
   # deployPackage:
@@ -62,7 +70,7 @@ jobs:
   #   - uses: actions/download-artifact@main
   #     with: 
   #       name: drop
-  #       path: artifacts
+  #       path: artifacts/MyLibrary.*.nupkg
 
   # deployWebApp:
   #   needs: build
@@ -72,4 +80,4 @@ jobs:
   #   - uses: actions/download-artifact@main
   #     with: 
   #       name: drop
-  #       path: artifacts
+  #       path: artifacts/website.zip
