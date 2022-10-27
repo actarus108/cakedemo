@@ -86,6 +86,8 @@ jobs:
       with: 
         name: package
     - run: echo Deploying the Nuget Package
+    - run: |
+        dotnet nuget push "MyLibrary.*.nupkg"  --api-key ${{ secrets.PACKAGES_TOKEN }} --source "github"
 
   deployWebApp:
     needs: build
