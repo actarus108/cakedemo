@@ -61,12 +61,19 @@ jobs:
           recreate: true
           path: code-coverage-results.md
 
-      - name: Publish Artifacts
+      - name: Publish Website Artifacts
         uses: actions/upload-artifact@main
         with:
-          name: drop
+          name: website
           path: |
             artifacts/website.zip
+            artifacts/*.nupkg
+
+      - name: Publish MyLibrary Artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: package
+          path: |
             artifacts/*.nupkg
 
   deployPackage:
@@ -74,10 +81,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/download-artifact@main
+    - name: Download MyLibrary Artifacts
+      uses: actions/download-artifact@main
       with: 
-        name: drop
-        path: artifacts/MyLibrary.*.nupkg
+        name: package
     - run: echo Deploying the Nuget Package
 
   deployWebApp:
@@ -85,8 +92,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/download-artifact@main
+    - name: Download Website Artifacts
+      uses: actions/download-artifact@main
       with: 
-        name: drop
-        path: artifacts/website.zip
+        name: website
     - run: echo Deploying the Web Application
