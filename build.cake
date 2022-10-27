@@ -3,7 +3,7 @@ using System.Diagnostics;
 var target            = Argument("target", "Default");
 var configuration     = Argument("configuration", "Release");
 var build             = Argument("build", "0");
-var revision          = Argument("revision", string.Empty);
+var revision          = Argument("revision", "local");
 
 var rootAbsoluteDir = "./";
 var artifactsFolder = "./artifacts";
@@ -72,9 +72,8 @@ Task("PublishWebApp")
 
 Task("ZipWebAppOutput")
   .IsDependentOn("PublishWebApp")
-  .Does(() => {
-    var webAppFiles = GetFiles(webAppOutputFolder + "/*.*");
-    Zip(webAppOutputFolder, artifactsFolder + "/" + webAppArtifactFileName, webAppFiles);
+  .Does(() => {    
+    Zip(webAppOutputFolder, artifactsFolder + "/" + webAppArtifactFileName);
   });
 
 Task("PublishLibrary")
