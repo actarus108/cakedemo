@@ -36,18 +36,18 @@ jobs:
             build: ${{ steps.get-id.outputs.BUILD_ID }}
             revision: ${{ env.revision }}
         
-      # - name: Publish Tests Results
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: dotnet-results-${{ matrix.dotnet-version }}
-      #     path: TestResults-${{ matrix.dotnet-version }}        
-      #   if: ${{ always() }}
+      - name: Publish Tests Results
+        uses: dorny/test-reporter@v1.6.0
+        if: always()
+        with:
+          name: Tests Results
+          path: testresults/*.trx
+          reporter: dotnet-trx
 
       # - name: Publish Code Coverage Results
 
       # - name: Publish Artifacts
-
-      # - uses: actions/upload-artifact@main
+      #   uses: actions/upload-artifact@main
       #   with:
       #     name: drop
       #     path: artifacts/
