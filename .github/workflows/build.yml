@@ -46,11 +46,13 @@ jobs:
 
       # - name: Publish Code Coverage Results
 
-      # - name: Publish Artifacts
-      #   uses: actions/upload-artifact@main
-      #   with:
-      #     name: drop
-      #     path: artifacts/
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: drop
+          path: |
+            artifacts/*.zip
+            artifacts/*.nupkg
 
   # deployPackage:
   #   needs: build
