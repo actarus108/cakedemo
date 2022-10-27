@@ -11,6 +11,7 @@
     <Product>Cake MyLibrary Demo</Product>
     <Description>Library defining calculator methods</Description>
     <Copyright>Yannick Willi</Copyright>
+    <RepositoryUrl>https://github.com/actarus108/cakedemo.git</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
