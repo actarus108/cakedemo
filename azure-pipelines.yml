@@ -70,7 +70,13 @@ stages:
     jobs:
     - job: DeployPackage
       steps:
-        - script: echo Deploying the Nuget Package
+        - task: DotNetCoreCLI@2
+          displayName: Publishing the nuget Package to the Azure DevOps feed
+          inputs:
+            command: 'push'
+            packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+            nuGetFeedType: 'internal'
+            publishVstsFeed: 'afa87726-6977-4997-b7df-99c5d3cf444e/fb789773-b199-461c-a975-0f88275a8f1f'
 
   - stage: DeployWebApp
     jobs:
