@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  
+  AZURE_WEBAPP_NAME: democake-ywi-github
   buildConfiguration: Release
   revision: ci
 
@@ -78,6 +78,7 @@ jobs:
 
   deployPackage:
     needs: build
+    if: github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -93,11 +94,17 @@ jobs:
 
   deployWebApp:
     needs: build
+    if: github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Download Website Artifacts
       uses: actions/download-artifact@main
       with: 
-        name: website
-    - run: echo Deploying the Web Application
+        name: website    
+    - name: 'Deploying the Web Application'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: 'website.zip'
