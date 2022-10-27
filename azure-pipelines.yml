@@ -70,16 +70,30 @@ stages:
     jobs:
     - job: DeployPackage
       steps:
+        - download: current
+          displayName: 'Download the artifacts'
+          artifact: 'drop'
+
         - task: DotNetCoreCLI@2
           displayName: Publishing the nuget Package to the Azure DevOps feed
           inputs:
             command: 'push'
-            packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+            packagesToPush: '$(Pipeline.Workspace)/drop/**/*.nupkg'
             nuGetFeedType: 'internal'
             publishVstsFeed: 'afa87726-6977-4997-b7df-99c5d3cf444e/fb789773-b199-461c-a975-0f88275a8f1f'
 
-  - stage: DeployWebApp
-    jobs:
-    - job: DeployWebApp
-      steps:
-        - script: echo Deploying the Web Application
+  # - stage: DeployWebApp
+  #   jobs:
+  #   - job: DeployWebApp
+  #     steps:
+  #       - download: current
+  #         displayName: 'Download the artifacts'
+  #         artifact: 'drop'
+
+  #       - task: AzureRmWebAppDeployment@4
+  #         inputs:
+  #           ConnectionType: 'AzureRM'
+  #           azureSubscription: 'Yannick Willi Test (04a61ddd-6439-434b-9277-705c39fb6fdc)'
+  #           appType: 'webAppLinux'
+  #           WebAppName: ''
+  #           packageForLinux: '$(Pipeline.Workspace)/drop/**website.zip'
