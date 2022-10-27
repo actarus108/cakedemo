@@ -69,22 +69,24 @@ jobs:
             artifacts/website.zip
             artifacts/*.nupkg
 
-  # deployPackage:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - uses: actions/download-artifact@main
-  #     with: 
-  #       name: drop
-  #       path: artifacts/MyLibrary.*.nupkg
+  deployPackage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@main
+      with: 
+        name: drop
+        path: artifacts/MyLibrary.*.nupkg
+    - run: echo Deploying the Nuget Package
 
-  # deployWebApp:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - uses: actions/download-artifact@main
-  #     with: 
-  #       name: drop
-  #       path: artifacts/website.zip
+  deployWebApp:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@main
+      with: 
+        name: drop
+        path: artifacts/website.zip
+    - run: echo Deploying the Web Application
