@@ -16,11 +16,11 @@ Cake runs on modern .NET platform (.NET Core 3.1 or .NET 5 and newer) and is ava
 
 ### IDE integration
 
-Cake can run as simple console applications with full IDE integration including IntelliSense or refactoring. There are extensions available to provide advanced features for most popular IDEs and editors. 
+Cake can run as simple console applications with full IDE integration including IntelliSense or refactoring. There are extensions available to provide advanced features for most popular IDEs and editors.
 
 ### Reliable
 
-Regardless if you're building on your own machine, or building on a CI system such as Azure Pipelines, GitHub Actions, TeamCity or Jenkins, Cake is built to behave in the same way. See Build Systems for a full list.
+Regardless if you're building on your own machine, or building on a CI system such as Azure Pipelines, GitHub Actions, TeamCity or Jenkins, Cake is built to behave in the same way.
 
 ### Batteries included
 
