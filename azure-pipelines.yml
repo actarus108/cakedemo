@@ -107,7 +107,7 @@ stages:
         - task: AzureRmWebAppDeployment@4
           inputs:
             ConnectionType: 'AzureRM'
-            azureSubscription: 'Yannick WILLI – MPN(0a5e66fb-a6b6-4a7e-b419-3f7e47ae620c)'
+            azureSubscription: ''
             appType: 'webAppLinux'
             WebAppName: 'democake-ywi-devops'
             packageForLinux: '$(Pipeline.Workspace)/drop/**website.zip'
